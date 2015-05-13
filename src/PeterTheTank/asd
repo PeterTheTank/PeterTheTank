@@ -1,0 +1,9 @@
+System.out.println("in center");
+				// Tell the game that when we take move,
+				// we'll also want to turn right... a lot.
+				setTurnRight(50);
+				// Limit our speed to 5
+				setMaxVelocity(50);
+				// Start moving (and turning)
+				ahead(100);
+				// Repeat.
