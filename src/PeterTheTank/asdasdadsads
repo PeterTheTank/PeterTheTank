@@ -1,0 +1,65 @@
+private void move() {
+		if (inCenter) {
+			System.out.println(" was in center");
+			// Tell the game that when we take move,
+			// we'll also want to turn right... a lot.
+			setTurnLeft(43);
+
+			// Limit our speed to 5
+			setMaxVelocity(500);
+			// Start moving (and turning)
+			ahead(100);
+			// Repeat.
+
+		} else {
+			
+			goToCenter();
+			inCenter = isInCenter();
+
+		}
+	}
+
+	private void goToCenter() {
+		System.out.println(" go to center");
+		setGoto(getBattleFieldWidth() / 2, (getBattleFieldHeight() / 2));
+		waitFor(new TurnCompleteCondition(this));
+	}
+
+	private boolean isInCenter() {
+
+		double posX = getX(), posY = getY(), centX = getBattleFieldWidth() / 2, centY =  (getBattleFieldHeight() / 2);
+		posX -= centX;
+		posY -= centY;
+		
+		System.out.println(posX);
+		System.out.println(posY);
+		
+		
+		if(posX <=10 && posX >= -10){
+			if(posY <=10 && posY >= -10){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public void onHitRobot(HitRobotEvent event) {
+		goToCenter();
+		inCenter = isInCenter();
+	}
+	
+	@Override
+	public void onHitWall(HitWallEvent event) {
+		goToCenter();
+		inCenter = isInCenter();
+	}
+
+	private void setGoto(double x, double y) {
+		double myX = getX(), myY = getY();
+		double goAngle = Utils.normalRelativeAngle(Math.atan2(x - myX, y - myY)
+				- getHeadingRadians());
+		setTurnRightRadians(Math.tan(goAngle));
+		setAhead(Math.cos(goAngle)
+				* Math.sqrt((myX - x) * (myX - x) + (myY - y) * (myY - y)));
+	}
